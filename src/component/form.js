@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import './form.css'
+import { Vortex } from 'react-loader-spinner'
 function UserForm() {
     const [source, setSource] = useState("1");
     const [output, setOutput] = useState("");
@@ -11,6 +12,7 @@ function UserForm() {
     const [url, setUrl] = useState("");
     const [pdfFile, setPdfFile] = useState(null);
     const [type, setType] = useState("1");
+    const [showLoader,setShowLoader] = useState(false);
 
     const handleChangeType= (event) =>{
         const val = event.target.value;
@@ -61,16 +63,17 @@ function UserForm() {
 
         // Here you could send the formData to a server
         console.log('Form Data Ready for Submission:', Object.fromEntries(formData.entries()));
-
-
+        setShowLoader(true)
         axios.post('http://localhost:5000/runscript', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             }
         }).then(response => {
+            setShowLoader(false);
             console.log('Server Response:', response.data);
             setOutput(response.data.output);
         }).catch(err => {
+            setShowLoader(false)
             console.error('API call error:', err);
         });
     };
@@ -116,11 +119,22 @@ function UserForm() {
                 <div className="col-12">
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </div>
+                {
+                    showLoader && (<Vortex
+                        visible={true}
+                        height="80"
+                        width="80"
+                        ariaLabel="vortex-loading"
+                        wrapperStyle={{}}
+                        wrapperClass="vortex-wrapper"
+                        colors={['red', 'green', 'blue', 'yellow', 'orange', 'purple']}
+                    />)
+                }
                     </form>
                 </div>
             </div>
             <div></div>
-            { output!= "" && 
+            { output!== "" && 
                 ( 
                     <div className="card">
                         <h5 className="card-header">Summary</h5>
