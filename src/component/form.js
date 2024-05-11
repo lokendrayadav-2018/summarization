@@ -13,8 +13,9 @@ function UserForm() {
     const [url, setUrl] = useState("");
     const [pdfFile, setPdfFile] = useState(null);
     const [type, setType] = useState("1");
+    // const [number,setNumber] = useState(10);
     const [showLoader, setShowLoader] = useState(false);
-    const [error, setError] = useState({ rawText: '', url: '', pdfFile: '' });
+    const [error, setError] = useState({ rawText: '', url: '', pdfFile: '' ,summaryWord:''});
 
     const handleChangeType = (event) => {
         const val = event.target.value;
@@ -91,6 +92,11 @@ function UserForm() {
         setOutput("");
     };
 
+    // const handleSummaryWordChange=(event)=>{
+    //     setNumber(event.target.value);
+    //     setOutput("");
+    // }
+
     const handleSubmit = (event) => {
         event.preventDefault();
         let isValid = true;
@@ -105,6 +111,7 @@ function UserForm() {
         const formData = new FormData();
         formData.append('type', type);
         formData.append('source', source);
+        // formData.append('number', number);
         if (showRawText) formData.append('text', rawText);
         if (showUrl) formData.append('url', url);
         if (showPdf && pdfFile) formData.append('file', pdfFile);
@@ -141,6 +148,12 @@ function UserForm() {
                                 <option value="3">PDF</option>
                             </select>
                         </div>
+                        {/* <div className="col-md-6">
+                        <label htmlFor="summary_word" className="form-label">No of words(in summary)</label>
+                                <input type="number" className="form-control" id="summary_word" placeholder="10" min="10" value={number} onChange={handleSummaryWordChange} />
+                                {error.summaryWord && <div className="text-danger">{error.summaryWord}</div>}
+                        </div> */}
+
                         {showRawText && (
                             <div className="col-12">
                                 <label htmlFor="text" className="form-label">Enter Raw Text</label>
