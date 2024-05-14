@@ -16,7 +16,7 @@ function UserForm() {
     // const [number,setNumber] = useState(10);
     const [showLoader, setShowLoader] = useState(false);
     const [error, setError] = useState({ rawText: '', url: '', pdfFile: '' ,summaryWord:''});
-
+    const [showOverlay, setShowOverlay] = useState(false);
     const handleChangeType = (event) => {
         const val = event.target.value;
         setType(val);
@@ -117,19 +117,23 @@ function UserForm() {
         if (showPdf && pdfFile) formData.append('file', pdfFile);
 
         setShowLoader(true);
+        setShowOverlay(true);
         axios.post('http://localhost:5000/runscript', formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
         }).then(response => {
             setShowLoader(false);
+            setShowOverlay(false);
             setOutput(response.data.output);
         }).catch(err => {
             setShowLoader(false);
+            setShowOverlay(false);
             console.error('API call error:', err);
         });
     };
 
     return (
         <div className="h-100 align-items-center justify-content-center">
+            {showOverlay && <div className="overlay"></div>} {/* Render overlay */}
             <div className="card">
                 <div className="card-body">
                     <form className="row g-3" onSubmit={handleSubmit}>
